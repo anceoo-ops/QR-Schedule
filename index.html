@@ -8,7 +8,7 @@
 
     <title>Qubiq — Elejas vidusskolas stundu saraksts</title>
 
-    <meta name="description" content="Elejas vidusskolas stundu saraksts. Qubiq — School technology, made simple.">
+    <meta name="description" content="Elejas vidusskolas stundu saraksts. Qubiq — skolas tehnoloģijas vienkārši un ērti.">
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -17,156 +17,162 @@
 
     <div class="container">
 
-        <div class="header">
+        <header class="header">
 
-            <!-- Qubiq company branding -->
             <div class="brand">
                 <img
                     src="Blue%20and%20White%20Modern%20Technology%20Company%20Logo.jpg"
-                    alt="Qubiq logo"
+                    alt="Qubiq uzņēmuma logotips"
                     class="company-logo"
                 >
 
                 <div class="brand-text">
                     <div class="logo">Qubiq</div>
-                    <p class="tagline">School technology, made simple.</p>
+                    <p class="tagline">Skolas tehnoloģijas vienkārši.</p>
                 </div>
             </div>
 
             <h1>Elejas vidusskolas stundu saraksts</h1>
 
-            <!-- Official JA Latvia project logo -->
             <img
                 src="JA-Latvia-LOGO-2022-horizontals.png"
-                alt="JA Latvia oficiālais projekta logo"
+                alt="Junior Achievement Latvia projekta logotips"
                 class="project-logo"
             >
 
-            <div class="pixel-star star-one">✦</div>
-            <div class="pixel-star star-two">✧</div>
+            <div class="pixel-star star-one" aria-hidden="true">✦</div>
+            <div class="pixel-star star-two" aria-hidden="true">✧</div>
 
-        </div>
+        </header>
 
-        <div class="section-title">
-            IZVĒLIES KLASI
-        </div>
+        <main>
 
-        <div class="class-buttons">
-
-            <button onclick="showSchedule('4a')">
-                <span>4a</span>
-                <small>KLASE</small>
-            </button>
-
-            <button onclick="showSchedule('4b')">
-                <span>4b</span>
-                <small>KLASE</small>
-            </button>
-
-            <button onclick="showSchedule('5a')">
-                <span>5a</span>
-                <small>KLASE</small>
-            </button>
-
-            <button onclick="showSchedule('5b')">
-                <span>5b</span>
-                <small>KLASE</small>
-            </button>
-
-            <button onclick="showSchedule('6a')">
-                <span>6a</span>
-                <small>KLASE</small>
-            </button>
-
-            <button onclick="showSchedule('6b')">
-                <span>6b</span>
-                <small>KLASE</small>
-            </button>
-
-            <button onclick="showSchedule('7a')">
-                <span>7a</span>
-                <small>KLASE</small>
-            </button>
-
-            <button onclick="showSchedule('7b')">
-                <span>7b</span>
-                <small>KLASE</small>
-            </button>
-
-            <button onclick="showSchedule('8a')">
-                <span>8a</span>
-                <small>KLASE</small>
-            </button>
-
-            <button onclick="showSchedule('8b')">
-                <span>8b</span>
-                <small>KLASE</small>
-            </button>
-
-            <button onclick="showSchedule('9a')">
-                <span>9a</span>
-                <small>KLASE</small>
-            </button>
-
-            <button onclick="showSchedule('9b')">
-                <span>9b</span>
-                <small>KLASE</small>
-            </button>
-
-            <button onclick="showSchedule('10')">
-                <span>10.</span>
-                <small>KLASE</small>
-            </button>
-
-            <button onclick="showSchedule('11')">
-                <span>11.</span>
-                <small>KLASE</small>
-            </button>
-
-            <button onclick="showSchedule('12')">
-                <span>12.</span>
-                <small>KLASE</small>
-            </button>
-
-        </div>
-
-        <div class="decoration">
-
-            <div class="pixel-book book-one"></div>
-            <div class="pixel-book book-two"></div>
-
-            <div class="pixel-pencil">
-                <div class="pencil-body"></div>
-                <div class="pencil-tip"></div>
+            <div class="section-title">
+                <span class="section-icon">▦</span>
+                IZVĒLIES SAVU KLASI
             </div>
 
-        </div>
+            <div class="class-buttons">
 
-        <!-- Lesson changes announcement checker -->
-        <div id="school-changes" class="school-changes">
-            <h2>📢 Stundu izmaiņas</h2>
+                <button onclick="showSchedule('4a')">
+                    <span>4.a</span>
+                    <small>KLASE</small>
+                </button>
 
-            <p id="changes-text">
-                Ielādē stundu izmaiņas...
-            </p>
+                <button onclick="showSchedule('4b')">
+                    <span>4.b</span>
+                    <small>KLASE</small>
+                </button>
 
-            <a
-                id="changes-link"
-                href="https://www.elejasvsk.lv/dokumenti/izmainas.html"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Skatīt skolas mājaslapā
-            </a>
-        </div>
+                <button onclick="showSchedule('5a')">
+                    <span>5.a</span>
+                    <small>KLASE</small>
+                </button>
 
-        <!-- Timetable appears here -->
-        <div id="schedule"></div>
+                <button onclick="showSchedule('5b')">
+                    <span>5.b</span>
+                    <small>KLASE</small>
+                </button>
+
+                <button onclick="showSchedule('6a')">
+                    <span>6.a</span>
+                    <small>KLASE</small>
+                </button>
+
+                <button onclick="showSchedule('6b')">
+                    <span>6.b</span>
+                    <small>KLASE</small>
+                </button>
+
+                <button onclick="showSchedule('7a')">
+                    <span>7.a</span>
+                    <small>KLASE</small>
+                </button>
+
+                <button onclick="showSchedule('7b')">
+                    <span>7.b</span>
+                    <small>KLASE</small>
+                </button>
+
+                <button onclick="showSchedule('8a')">
+                    <span>8.a</span>
+                    <small>KLASE</small>
+                </button>
+
+                <button onclick="showSchedule('8b')">
+                    <span>8.b</span>
+                    <small>KLASE</small>
+                </button>
+
+                <button onclick="showSchedule('9a')">
+                    <span>9.a</span>
+                    <small>KLASE</small>
+                </button>
+
+                <button onclick="showSchedule('9b')">
+                    <span>9.b</span>
+                    <small>KLASE</small>
+                </button>
+
+                <button onclick="showSchedule('10')">
+                    <span>10.</span>
+                    <small>KLASE</small>
+                </button>
+
+                <button onclick="showSchedule('11')">
+                    <span>11.</span>
+                    <small>KLASE</small>
+                </button>
+
+                <button onclick="showSchedule('12')">
+                    <span>12.</span>
+                    <small>KLASE</small>
+                </button>
+
+            </div>
+
+            <div class="decoration" aria-hidden="true">
+                <div class="pixel-book book-one"></div>
+                <div class="pixel-book book-two"></div>
+
+                <div class="pixel-pencil">
+                    <div class="pencil-body"></div>
+                    <div class="pencil-tip"></div>
+                </div>
+            </div>
+
+            <section id="school-changes" class="school-changes">
+                <div class="announcement-heading">
+                    <span class="announcement-icon" aria-hidden="true">📢</span>
+                    <h2>Stundu izmaiņas</h2>
+                </div>
+
+                <p id="changes-text">Ielādē stundu izmaiņas...</p>
+
+                <a
+                    id="changes-link"
+                    href="https://www.elejasvsk.lv/dokumenti/izmainas.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Skatīt visas izmaiņas
+                    <span aria-hidden="true">↗</span>
+                </a>
+            </section>
+
+            <div id="schedule"></div>
+
+        </main>
+
+        <footer class="footer">
+            <span>Qubiq</span>
+            <span class="footer-dot">✦</span>
+            <span>Elejas vidusskola</span>
+        </footer>
 
     </div>
 
     <script src="script.js"></script>
 
 </body>
-
 </html>
