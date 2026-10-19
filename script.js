@@ -848,3 +848,26 @@ function showDay(day, button) {
 
     document.getElementById("daySchedule").innerHTML = html;
 }
+
+async function loadSchoolChanges() {
+    const textElement = document.getElementById("changes-text");
+
+    if (!textElement) return;
+
+    try {
+        const response = await fetch("changes.json?t=" + Date.now());
+
+        if (!response.ok) {
+            throw new Error("Neizdevās ielādēt izmaiņas");
+        }
+
+        const data = await response.json();
+
+        textElement.textContent =
+            data.announcement || "Pašlaik nav publicēta informācija.";
+
+    } catch (error) {
+        textElement.textContent =
+            "Stundu izmaiņas skatiet skolas mājaslapā.";
+    }
+}
