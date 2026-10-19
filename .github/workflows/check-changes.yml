@@ -51,13 +51,13 @@ jobs:
 
               def handle_data(self, data):
                   if not self.skip:
-                      text = data.strip()
-                      if text:
-                          self.parts.append(text)
+                      value = data.strip()
+                      if value:
+                          self.parts.append(value)
 
           request = Request(
               URL,
-              headers={"User-Agent": "QR-Schedule school timetable checker"}
+              headers={"User-Agent": "QR-Schedule timetable checker"}
           )
 
           with urlopen(request, timeout=30) as response:
@@ -66,34 +66,38 @@ jobs:
           parser = TextExtractor()
           parser.feed(page)
 
-          text = " ".join(parser.parts)
-          text = re.sub(r"\s+", " ", text).strip()
+          announcement = re.sub(
+              r"\s+", " ", " ".join(parser.parts)
+          ).strip()
 
-          if not text:
+          if not announcement:
               raise RuntimeError("No announcement text found.")
 
-          output = {
+          data = {
               "source": URL,
-              "announcement": text
+              "announcement": announcement
           }
 
-          Path("changes.json").write_text(
-              json.dumps(output, ensure_ascii=False, indent=2) + "\n",
-              encoding="utf-8"
-          )
+          path = Path("changes.json")
+          new_content = json.dumps(
+              data, ensure_ascii=False, indent=2
+          ) + "\n"
 
-          print("Successfully checked the school's announcements.")
-          print(text)
+          if not path.exists() or path.read_text(encoding="utf-8") != new_content:
+              path.write_text(new_content, encoding="utf-8")
+              print("Announcement file created or updated.")
+          else:
+              print("No announcement changes detected.")
           PY
 
       - name: Save changes if updated
         run: |
-          if ! git diff --quiet -- changes.json; then
+          git add changes.json
+          if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add changes.json
             git commit -m "Update school timetable announcements"
             git push
           else
-            echo "No announcement changes detected."
+            echo "No announcement changes to save."
           fi
