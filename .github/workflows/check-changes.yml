@@ -1,4 +1,3 @@
-
 name: Check school timetable changes
 
 on:
@@ -33,38 +32,45 @@ jobs:
 
           URL = "https://www.elejasvsk.lv/dokumenti/izmainas.html"
 
-          class TextExtractor(HTMLParser):
+          class AnnouncementParser(HTMLParser):
               def __init__(self):
                   super().__init__()
                   self.parts = []
-                  self.skip = 0
+                  self.capture = False
+                  self.skip = False
 
               def handle_starttag(self, tag, attrs):
-                  if tag in ("script", "style", "noscript"):
-                      self.skip += 1
-                  elif tag in ("p", "br", "div", "h1", "h2", "h3", "li"):
-                      self.parts.append("\n")
+                  if tag in ("script", "style", "head"):
+                      self.skip = True
+                  if tag == "body":
+                      self.skip = False
+                  if tag in ("h3", "p"):
+                      self.capture = True
+                      self.parts.append(" ")
 
               def handle_endtag(self, tag):
-                  if tag in ("script", "style", "noscript") and self.skip:
-                      self.skip -= 1
+                  if tag in ("script", "style", "head"):
+                      self.skip = False
+                  if tag in ("h3", "p"):
+                      self.capture = False
+                      self.parts.append(" ")
 
               def handle_data(self, data):
-                  if not self.skip:
-                      value = data.strip()
-                      if value:
-                          self.parts.append(value)
+                  if self.capture and not self.skip:
+                      text = data.strip()
+                      if text:
+                          self.parts.append(text)
 
           request = Request(
               URL,
-              headers={"User-Agent": "QR-Schedule timetable checker"}
+              headers={"User-Agent": "Mozilla/5.0"}
           )
 
           with urlopen(request, timeout=30) as response:
-              page = response.read().decode("utf-8", errors="replace")
+              html = response.read().decode("utf-8", errors="replace")
 
-          parser = TextExtractor()
-          parser.feed(page)
+          parser = AnnouncementParser()
+          parser.feed(html)
 
           announcement = re.sub(
               r"\s+", " ", " ".join(parser.parts)
@@ -78,16 +84,13 @@ jobs:
               "announcement": announcement
           }
 
-          path = Path("changes.json")
-          new_content = json.dumps(
+          content = json.dumps(
               data, ensure_ascii=False, indent=2
           ) + "\n"
 
-          if not path.exists() or path.read_text(encoding="utf-8") != new_content:
-              path.write_text(new_content, encoding="utf-8")
-              print("Announcement file created or updated.")
-          else:
-              print("No announcement changes detected.")
+          Path("changes.json").write_text(
+              content, encoding="utf-8"
+          )
           PY
 
       - name: Save changes if updated
