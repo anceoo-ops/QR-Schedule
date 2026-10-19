@@ -32,34 +32,27 @@ jobs:
 
           URL = "https://www.elejasvsk.lv/dokumenti/izmainas.html"
 
-          class AnnouncementParser(HTMLParser):
+          class TextParser(HTMLParser):
               def __init__(self):
                   super().__init__()
                   self.parts = []
-                  self.capture = False
-                  self.skip = False
+                  self.skip = 0
 
               def handle_starttag(self, tag, attrs):
-                  if tag in ("script", "style", "head"):
-                      self.skip = True
-                  if tag == "body":
-                      self.skip = False
-                  if tag in ("h3", "p"):
-                      self.capture = True
+                  if tag in ("script", "style", "noscript"):
+                      self.skip += 1
+                  elif tag in ("p", "br", "div", "h1", "h2", "h3", "li"):
                       self.parts.append(" ")
 
               def handle_endtag(self, tag):
-                  if tag in ("script", "style", "head"):
-                      self.skip = False
-                  if tag in ("h3", "p"):
-                      self.capture = False
-                      self.parts.append(" ")
+                  if tag in ("script", "style", "noscript") and self.skip:
+                      self.skip -= 1
 
               def handle_data(self, data):
-                  if self.capture and not self.skip:
-                      text = data.strip()
-                      if text:
-                          self.parts.append(text)
+                  if not self.skip:
+                      value = data.strip()
+                      if value:
+                          self.parts.append(value)
 
           request = Request(
               URL,
@@ -69,28 +62,36 @@ jobs:
           with urlopen(request, timeout=30) as response:
               html = response.read().decode("utf-8", errors="replace")
 
-          parser = AnnouncementParser()
+          parser = TextParser()
           parser.feed(html)
 
-          announcement = re.sub(
-              r"\s+", " ", " ".join(parser.parts)
-          ).strip()
+          text = re.sub(r"\s+", " ", " ".join(parser.parts)).strip()
+
+          match = re.search(
+              r"(\d{1,2}\.\s*oktobris.*?)(?=\s{2,}|$)",
+              text,
+              re.IGNORECASE
+          )
+
+          if match:
+              announcement = match.group(1).strip()
+          else:
+              announcement = text
 
           if not announcement:
-              raise RuntimeError("No announcement text found.")
+              raise RuntimeError("The school page returned no readable text.")
 
           data = {
               "source": URL,
               "announcement": announcement
           }
 
-          content = json.dumps(
-              data, ensure_ascii=False, indent=2
-          ) + "\n"
-
           Path("changes.json").write_text(
-              content, encoding="utf-8"
+              json.dumps(data, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8"
           )
+
+          print("Announcement saved:", announcement)
           PY
 
       - name: Save changes if updated
