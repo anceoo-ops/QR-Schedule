@@ -848,7 +848,6 @@ function showDay(day, button) {
 
     document.getElementById("daySchedule").innerHTML = html;
 }
-
 async function loadSchoolChanges() {
     const textElement = document.getElementById("changes-text");
 
@@ -871,3 +870,5 @@ async function loadSchoolChanges() {
             "Stundu izmaiņas skatiet skolas mājaslapā.";
     }
 }
+
+loadSchoolChanges();
