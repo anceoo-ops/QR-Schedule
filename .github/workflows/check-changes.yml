@@ -1,0 +1,99 @@
+
+name: Check school timetable changes
+
+on:
+  schedule:
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check-changes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Check school website
+        run: |
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from urllib.request import Request, urlopen
+          from pathlib import Path
+          import json
+          import re
+
+          URL = "https://www.elejasvsk.lv/dokumenti/izmainas.html"
+
+          class TextExtractor(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.parts = []
+                  self.skip = 0
+
+              def handle_starttag(self, tag, attrs):
+                  if tag in ("script", "style", "noscript"):
+                      self.skip += 1
+                  elif tag in ("p", "br", "div", "h1", "h2", "h3", "li"):
+                      self.parts.append("\n")
+
+              def handle_endtag(self, tag):
+                  if tag in ("script", "style", "noscript") and self.skip:
+                      self.skip -= 1
+
+              def handle_data(self, data):
+                  if not self.skip:
+                      text = data.strip()
+                      if text:
+                          self.parts.append(text)
+
+          request = Request(
+              URL,
+              headers={"User-Agent": "QR-Schedule school timetable checker"}
+          )
+
+          with urlopen(request, timeout=30) as response:
+              page = response.read().decode("utf-8", errors="replace")
+
+          parser = TextExtractor()
+          parser.feed(page)
+
+          text = " ".join(parser.parts)
+          text = re.sub(r"\s+", " ", text).strip()
+
+          if not text:
+              raise RuntimeError("No announcement text found.")
+
+          output = {
+              "source": URL,
+              "announcement": text
+          }
+
+          Path("changes.json").write_text(
+              json.dumps(output, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8"
+          )
+
+          print("Successfully checked the school's announcements.")
+          print(text)
+          PY
+
+      - name: Save changes if updated
+        run: |
+          if ! git diff --quiet -- changes.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add changes.json
+            git commit -m "Update school timetable announcements"
+            git push
+          else
+            echo "No announcement changes detected."
+          fi
