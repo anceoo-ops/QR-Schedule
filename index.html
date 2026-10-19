@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="lv">
 
@@ -5,7 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Elejas vidusskola — Stundu saraksts</title>
+    <title>Qubiq — Elejas vidusskolas stundu saraksts</title>
+
+    <meta name="description" content="Elejas vidusskolas stundu saraksts. Qubiq — School technology, made simple.">
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -16,18 +19,28 @@
 
         <div class="header">
 
-            <div class="pixel-computer">
-                <div class="computer-screen"></div>
-                <div class="computer-base"></div>
+            <!-- Qubiq company branding -->
+            <div class="brand">
+                <img
+                    src="Blue%20and%20White%20Modern%20Technology%20Company%20Logo.jpg"
+                    alt="Qubiq logo"
+                    class="company-logo"
+                >
+
+                <div class="brand-text">
+                    <div class="logo">Qubiq</div>
+                    <p class="tagline">School technology, made simple.</p>
+                </div>
             </div>
 
-            <div class="logo">QR_SARAKSTS // 01</div>
+            <h1>Elejas vidusskolas stundu saraksts</h1>
 
-            <h1>Stundu saraksts</h1>
-
-            <p class="subtitle">
-                Tava skola. Tavs saraksts.
-            </p>
+            <!-- Official JA Latvia project logo -->
+            <img
+                src="JA-Latvia-LOGO-2022-horizontals.png"
+                alt="JA Latvia oficiālais projekta logo"
+                class="project-logo"
+            >
 
             <div class="pixel-star star-one">✦</div>
             <div class="pixel-star star-two">✧</div>
@@ -128,16 +141,26 @@
             </div>
 
         </div>
-<div id="school-changes" class="school-changes">
-    <h2>📢 Stundu izmaiņas</h2>
-    <p id="changes-text">Ielādē stundu izmaiņas...</p>
-    <a id="changes-link"
-       href="https://www.elejasvsk.lv/dokumenti/izmainas.html"
-       target="_blank"
-       rel="noopener noreferrer">
-       Skatīt skolas mājaslapā
-    </a>
-</div>
+
+        <!-- Lesson changes announcement checker -->
+        <div id="school-changes" class="school-changes">
+            <h2>📢 Stundu izmaiņas</h2>
+
+            <p id="changes-text">
+                Ielādē stundu izmaiņas...
+            </p>
+
+            <a
+                id="changes-link"
+                href="https://www.elejasvsk.lv/dokumenti/izmainas.html"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Skatīt skolas mājaslapā
+            </a>
+        </div>
+
+        <!-- Timetable appears here -->
         <div id="schedule"></div>
 
     </div>
